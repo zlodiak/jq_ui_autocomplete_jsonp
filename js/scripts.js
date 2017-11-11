@@ -47,7 +47,7 @@ $( document ).ready(function() {
 
 	function getRegions(countryId) {
 		$.ajax({
-	    url: "http://api.vk.com/method/database.getRegions?v=5.5&country_id=" + countryId,
+	    url: "http://api.vk.com/method/database.getRegions?v=5.69&country_id=" + countryId,
 	    dataType: "jsonp",
 	    success: function( data ) {
 				var regionsRaw = data['response']['items'];
@@ -81,7 +81,7 @@ $( document ).ready(function() {
 
 	function getCities(countryId, regionId) {
 		$.ajax({
-	    url: "http://api.vk.com/method/database.getCities?v=5.5&offset=1000&need_all=0&count=1000&country_id=" + countryId + "&region_id=" + regionId,
+	    url: "http://api.vk.com/method/database.getCities?v=5.69&need_all=0&country_id=" + countryId + "&region_id=" + regionId,
 	    dataType: "jsonp",
 	    success: function( data ) {
 	    	console.log('data', data);
