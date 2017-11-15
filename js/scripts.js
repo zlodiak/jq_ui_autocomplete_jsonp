@@ -6,7 +6,7 @@ $( document ).ready(function() {
 	var regionsArr = [],
 			regionsObj = {};	
 	var citiesArr = [],
-			citiesObj = {};						
+			citiesObj = {};					
 
 	$('#region').attr('disabled', 'disabled');
 	$('#city').attr('disabled', 'disabled');
@@ -72,14 +72,54 @@ $( document ).ready(function() {
 						$('#region').attr('disabled', 'disabled');
 						$('#city').removeAttr('disabled');					
 	          console.log(event, ui);
-	          getCities(countryId, regionsObj[ui.item.label]);
+	          getCitiesOut(countryId, regionsObj[ui.item.label]);
 		      }
 				});		
 			}		    	
 	  })	
 	};
 
-	function getCities(countryId, regionId) {
+	function getCitiesOut(countryId, regionId) {
+		console.log('countryId, regionId', countryId, regionId);
+		getCities();
+
+		function getCities( offset, limit ) {
+	    if( ! limit || limit > 1000 ) limit = 1000; //число запрашиваемых городов, максимально 1000, по умолчанию 1000
+	    if( ! offset ) offset = 0; //по умолчанию 0
+
+	    $.ajax({
+		    url: "http://api.vk.com/method/database.getCities?v=5.69&need_all=0&count="+limit+"&country_id=" + countryId +"&region_id=" + regionId +"&offset="+(offset*limit),
+		    dataType: "jsonp",
+		    success: function( data ) {
+	        console.log('data', data);
+	        var allCities = data.response.count;
+	        console.log('allCities', allCities);
+	        var citiesRaw = data['response']['items'];
+	        //с помощью concat можно объеденить 2 массива.
+	        citiesArr = citiesArr.concat(citiesRaw.map(function(city) {
+	          return city.title;
+	        }));
+	        //если в текущем ответе не все города то делаем ещё запрос с новым offset
+	        if( allCities > offset*limit + limit)
+	           getCities(offset+1, limit);   
+
+	        console.log('citiesArr', citiesArr);   
+
+					$( "#city" ).autocomplete({
+						delay: 0.5,
+						source: citiesArr,
+						select: function(event, ui) {
+							$('#city').attr('disabled', 'disabled');
+		          console.log(event, ui);
+		          alert('Код страны' + countryId + ', Код региона' + regionId + ', Код города' + citiesObj[ui.item.label]);
+			      }
+					});		             
+		    }           
+		  });
+		};	
+	}
+
+	/*function getCities(countryId, regionId) {
 		$.ajax({
 	    url: "http://api.vk.com/method/database.getCities?v=5.69&need_all=0&country_id=" + countryId + "&region_id=" + regionId,
 	    dataType: "jsonp",
@@ -109,5 +149,5 @@ $( document ).ready(function() {
 				});	
 	    }		    
 		});
-	};	
+	};	*/
 });
