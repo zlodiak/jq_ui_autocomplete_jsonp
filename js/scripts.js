@@ -105,6 +105,10 @@ $( document ).ready(function() {
 
 	        console.log('citiesArr', citiesArr);   
 
+				  citiesRaw.forEach(function(cities) {
+				  	citiesObj[cities.title] = cities.id;
+				  });	        
+
 					$( "#city" ).autocomplete({
 						delay: 0.5,
 						source: citiesArr,
@@ -118,36 +122,4 @@ $( document ).ready(function() {
 		  });
 		};	
 	}
-
-	/*function getCities(countryId, regionId) {
-		$.ajax({
-	    url: "http://api.vk.com/method/database.getCities?v=5.69&need_all=0&country_id=" + countryId + "&region_id=" + regionId,
-	    dataType: "jsonp",
-	    success: function( data ) {
-	    	console.log('data', data);
-				var citiesRaw = data['response']['items'];
-			  console.log( citiesRaw );
-
-			  citiesArr = citiesRaw.map(function(city) {
-			  	return city.title;
-			  });
-			  console.log(citiesArr);
-
-			  citiesRaw.forEach(function(city) {
-			  	citiesObj[city.title] = city.id;
-			  });
-			  console.log(citiesObj);
-
-				$( "#city" ).autocomplete({
-					delay: 0.5,
-					source: citiesArr,
-					select: function(event, ui) {
-						$('#city').attr('disabled', 'disabled');
-	          console.log(event, ui);
-	          alert('Код страны' + countryId + ', Код региона' + regionId + ', Код города' + citiesObj[ui.item.label]);
-		      }
-				});	
-	    }		    
-		});
-	};	*/
 });
